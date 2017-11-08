@@ -1,2 +1,2 @@
-# FizzBuzz_again_CSharp
-FizzBuzz is everywhere. Here's my take in C#.
+# FizzBuzz... again! (in C#)
+FizzBuzz is everywhere. Here's an example of a FizzBuzz console program, with a few extra bells and whistles for snaz. 
