@@ -6,7 +6,7 @@ namespace FizzBuzz_again {
 
         public static void Main(string[] args) {
 
-            while (true) {
+            while (true) { // Repeat indefinitely. 
                 Console.WriteLine("FizzBuzz... again! >:|");
                 Console.WriteLine("");
                 Console.WriteLine("");
@@ -28,11 +28,64 @@ namespace FizzBuzz_again {
             } 
         }
 
+        public static void GuessChecker(string UserInput, string Sender, int i) { // Only used by FizzPlay.
+
+            bool CorrectGuess = false;
+
+            switch (Sender) { // To Differentiate here, Sender is always lowercase, UserInput is always CamelCase.
+                case "fizz":
+                    if (UserInput == "Fizz") {
+                        CorrectGuess = true;
+                    } else {
+                        CorrectGuess = false;
+                    }
+                    break;
+                case "buzz":
+                    if (UserInput == "Buzz") {
+                        CorrectGuess = true;
+                    }
+                    else {
+                        CorrectGuess = false;
+                    }
+                    break;
+                case "fizzbuzz":
+                    if (UserInput == "FizzBuzz") {
+                        CorrectGuess = true;
+                    }
+                    else {
+                        CorrectGuess = false;
+                    }
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("{0}", i);
+                    Console.ResetColor();
+                    return;
+            }
+
+            switch (CorrectGuess) { 
+                case true:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("{0} {1}", i, UserInput);
+                    Console.ResetColor();
+                    break;
+
+                case false:
+                    Console.Write("Oh no!");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("{0}", i);
+                    Console.ResetColor();
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to return to the main menu.");
+                    Console.ReadKey(); // just waits for the user to press something.
+                    return;
+            }
+        }
 
         public static void FizzList() { // mainMenu option 1
 
-            Console.WriteLine("Enter FizzX and FizzY to begin!");
-            Console.WriteLine("List FizzBuzz results for [FizzX] through [Fizzy]");
+            Console.WriteLine("Enter where to start, and where to end!");
+            Console.WriteLine("Lists FizzBuzz results for [FizzX] through [FizzY]:");
             Console.WriteLine("");
 
             Int32 FizzX;
@@ -40,36 +93,29 @@ namespace FizzBuzz_again {
 
             Console.Write("FizzX: ");
             string FizzX_raw = Console.ReadLine(); // Get the value to begin counting at from the user.
-            bool xCheck = Int32.TryParse(FizzX_raw, out FizzX); // check that the value of FizzX_raw is a valid int, and not "wieners".
+            bool xCheck = Int32.TryParse(FizzX_raw, out FizzX); // Check that the value of FizzX_raw is a valid Int32, and not "wieners".
 
             if (xCheck) { // FizzX is a valid int.
                 Console.WriteLine("FizzY: "); 
-                string FizzY_raw = Console.ReadLine(); // get the value to count up to.
-                bool yCheck = Int32.TryParse(FizzY_raw, out FizzY); // check FizzY_raw the same way. 
+                string FizzY_raw = Console.ReadLine(); // Get the value to count up to.
+                bool yCheck = Int32.TryParse(FizzY_raw, out FizzY); // Check the value of FizzY_raw the same way. 
 
                 if (yCheck) { // FizzY is valid.
 
-                    if (FizzX < 0 || FizzY < 0) { // check for negatives. add this functionality later.
-                        Console.WriteLine("Negative numbers not supported yet..."); //TODO negatives.
-                        Console.WriteLine("");
-                        Console.WriteLine("");
-                        FizzList();
-                    }
-
-                    if (FizzY == FizzX) { // some people are wankers so be sure to check for cheeky shite like this...
+                    if (FizzY == FizzX) { // Edge case awareness day.
 
                         Console.Clear();
-                        Console.WriteLine("I know what you did."); // ...and say something cheeky back.
+                        Console.WriteLine("Please input unique numbers."); 
                         Console.WriteLine("");
                         Console.WriteLine("");
                         FizzList();
 
-                    } else if (FizzX > FizzY) { // maybe you did this by mistake? Maybe you're trying to break things.
+                    } else if (FizzX > FizzY) { // Make sure numbers get passed in from smallest to largest.
                         Console.Clear();
-                        FizzBuzz(FizzY, FizzX); // Show you, I will. Just pass 'em in backwards.
+                        FizzBuzz(FizzY, FizzX);
                     } else {
                         Console.Clear();
-                        FizzBuzz(FizzX, FizzY); // and finally, if the user actually followed the rules...
+                        FizzBuzz(FizzX, FizzY); // And finally, if all is well, we should end up here.
                     }
                 } else {
                     Console.WriteLine("Error at FizzY_raw");
@@ -89,22 +135,30 @@ namespace FizzBuzz_again {
             Console.WriteLine();
             Console.WriteLine("What number would you like to begin on?");
             Console.WriteLine("Enter \"help\" for instructions on how to play!");
+            Console.WriteLine();
 
             string FizzX_raw = Console.ReadLine(); 
-            bool xCheck = Int32.TryParse(FizzX_raw, out int FizzX); // check that the value of FizzX_raw is a valid int.
+            bool xCheck = Int32.TryParse(FizzX_raw, out int FizzX); // Check that the value of FizzX_raw is a valid Int32.
 
             if (xCheck) {
                 Console.Clear();
                 FizzBuzz(FizzX, Int32.MaxValue, GameTime: true);
 
             } else {
-                FizzX_raw.ToLower(); // case insensitive check
+                FizzX_raw.ToLower(); // Cast string to all lower case so it's easier to check against.
 
                 if (FizzX_raw == "help") { 
-                    
-                    //TODO: print controls: space = pass, F = Fizz!, B = Buzz, and X for FizzBuzz.
 
-                } else { // typing anything other than a parseable int or the string "help" just resets the function.
+                    Console.WriteLine("The rules are simple!");
+                    Console.WriteLine("Press \"f\" if the number is divisible by 3");
+                    Console.WriteLine("Press \"b\" if the number is divisible by 5");
+                    Console.WriteLine("Press \"x\" if the number is divisible by BOTH 3 and 5");
+                    Console.WriteLine("Press the space bar to pass if none of the above are true.");
+                    Console.ReadLine();
+                    Console.Clear();
+                    FizzPlay();
+
+                } else { // Typing anything other than a parseable Int32 or the string "help" just resets the function.
                     Console.Clear();
                     FizzPlay();
                 }
@@ -112,183 +166,83 @@ namespace FizzBuzz_again {
             } 
         }
 
-        public static void FizzBuzz(int FizzX, int FizzY, bool GameTime = false) { // takes X, Y, and an optional parameter for FizzPlay.
+        public static void FizzBuzz(int FizzX, int FizzY, bool GameTime = false) { // Takes X, Y, and an optional parameter for FizzPlay.
 
-            /* we can now safely assume:
+            /* We can now safely assume:
              * FizzX && FizzY are proper ints,
              * FizzX is smaller than FizzY,
-             * Neither FizzX nor FizzY are negative 
-             * -- (we'll add this functionality later)
              * making the actual FizzBuzz bit 
              * rather trivial.
              */
 
             int x = FizzX;
             int y = FizzY;
-            string userInput = null; // typeface consistency is important kids
-            bool CorrectGuess;
+            string UserInput = null; 
 
             for (int i = x; i <= y; i++) {
 
-                if (GameTime) { // check if game functionality should run, or just list results.
+                if (GameTime) { // Check if game functionality should run, or just list results.
 
-                    Console.WriteLine("Press your answer for: {0} [f = Fizz, b = Buzz, x = FizzBuzz] ", i);
-                    ConsoleKeyInfo GameKey = Console.ReadKey(); // have user press a key
+                    Console.WriteLine("Press your answer for: {0} ... [space = Pass, f = Fizz, b = Buzz, x = FizzBuzz] ", i);
+                    ConsoleKeyInfo GameKey = Console.ReadKey(); // Record key input.
 
                     switch (GameKey.Key) {
                             
                         case ConsoleKey.X:
-                            userInput = "fizzbuzz";
+                            UserInput = "FizzBuzz";
                             break;
                         case ConsoleKey.F:
-                            userInput = "fizz";
+                            UserInput = "Fizz";
                             break;
                         case ConsoleKey.B:
-                            userInput = "buzz";
+                            UserInput = "Buzz";
                             break;
                         default:
-                            userInput = "pass";
+                            UserInput = "pass";
                             break;
                     }
                 }
 
-                if (i != 0 && i % 3 == 0 && i % 5 == 0) { // "i" is divisible by both 3 and 5.
+                /*
+                 * There are fundamentally better ways to actually impliment FizzBuzz in terms of performance and readability.
+                 * I may come back some day and fundamentally rebuild this section. The only difficult at this stage is intigation
+                 * with FizzPlay(), which still isn't hard, just tedious. 
+                 */
+
+                if (i != 0 && i % 3 == 0 && i % 5 == 0) { // "i" is divisible by both 3 and 5. "fizzbuzz"
 
                     if (GameTime) {
-                        switch (userInput) { 
-                            case "fizzbuzz": // guessed correctly
-                                CorrectGuess = true;
-                                break;
-                            default:
-                                CorrectGuess = false;
-                                break;
-                        }
-
-                        switch (CorrectGuess) { // this could arguably be a separate function CorrectGuess(), but this way is easier for now. Potential area for future optimization.
-                            case true:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("{0} FizzBuzz!", i);
-                                Console.ResetColor();
-                                break;
-
-                            case false:
-                                Console.Write("Oh no!");
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("{0}", i);
-                                Console.ResetColor();
-                                Console.WriteLine();
-                                Console.WriteLine("Press any key to return to the main menu.");
-                                Console.ReadKey(); // just waits for the user to press something.
-                                return;
-                        }
-
+                        GuessChecker(UserInput, "fizzbuzz", i);
                     } else {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("FizzBuzz!");
                         Console.ResetColor();
                     }
                 }
-                else if (i % 3 == 0 && i % 5 != 0) { // "i" is divisible by 3, but not 5.
+                else if (i % 3 == 0 && i % 5 != 0) { // "i" is divisible by 3, but not 5. "fizz"
 
                     if (GameTime) {
-                        switch (userInput) {
-                            case "fizz": // guessed correctly
-                                CorrectGuess = true;
-                                break;
-                            default:
-                                CorrectGuess = false;
-                                break;
-                        }
-
-                        switch (CorrectGuess) {
-                            case true:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("{0} Fizz!", i);
-                                Console.ResetColor();
-                                break;
-
-                            case false:
-                                Console.Write("Oh no!");
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("{0}", i);
-                                Console.ResetColor();
-                                Console.WriteLine();
-                                Console.WriteLine("Press any key to return to the main menu.");
-                                Console.ReadKey(); // just waits for the user to press something.
-                                return;
-                        }
+                        GuessChecker(UserInput, "fizz", i);
                     } else {
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("Fizz!");
                         Console.ResetColor();
                     }
                 }
-                else if (i % 3 != 0 && i % 5 == 0) { // "i" is divisible by 5, but not 3.
+                else if (i % 3 != 0 && i % 5 == 0) { // "i" is divisible by 5, but not 3. "buzz"
 
                     if (GameTime) {
-                        switch (userInput) {
-                            case "buzz": // guessed correctly
-                                CorrectGuess = true;
-                                break;
-                            default:
-                                CorrectGuess = false;
-                                break;
-                        }
-
-                        switch (CorrectGuess) {
-                            case true:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("{0} Buzz!", i);
-                                Console.ResetColor();
-                                break;
-
-                            case false:
-                                Console.Write("Oh no!");
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("{0}", i);
-                                Console.ResetColor();
-                                Console.WriteLine();
-                                Console.WriteLine("Press any key to return to the main menu.");
-                                Console.ReadKey(); // just waits for the user to press something.
-                                return;
-                        }
+                        GuessChecker(UserInput, "buzz", i);
                     } else {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Buzz!");
                         Console.ResetColor();
                     }
                 }
-                else { // just print 
+                else { // Just print.
 
                     if (GameTime) {
-                        switch (userInput) {
-                            case "pass": // guessed correctly
-                                CorrectGuess = true;
-                                break;
-
-                            default:
-                                CorrectGuess = false;
-                                break;
-                        }
-
-                        switch (CorrectGuess) {
-                            case true:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("{0}", i);
-                                Console.ResetColor();
-                                break;
-
-                            case false:
-                                Console.Write("Oh no!");
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("{0}", i);
-                                Console.ResetColor();
-                                Console.WriteLine();
-                                Console.WriteLine("Press any key to return to the main menu.");
-                                Console.ReadKey(); // just waits for the user to press something.
-                                return;
-                        }
-
+                        GuessChecker(UserInput, "pass", i); // Ultimately 
                     } else {
                         Console.WriteLine(i);
                     }
@@ -298,7 +252,7 @@ namespace FizzBuzz_again {
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Press any key to return to the main menu.");
-            Console.ReadKey(); // just waits for the user to press something.
+            Console.ReadKey();
             Console.Clear();
         }
     }
