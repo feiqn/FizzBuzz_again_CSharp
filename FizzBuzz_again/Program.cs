@@ -205,7 +205,7 @@ namespace FizzBuzz_again {
 
                 /*
                  * There are fundamentally better ways to actually impliment FizzBuzz in terms of performance and readability.
-                 * I may come back some day and fundamentally rebuild this section. The only difficult at this stage is intigation
+                 * I may come back some day and entirely rebuild this section. The only difficulty at this stage is intigration
                  * with FizzPlay(), which still isn't hard, just tedious. 
                  */
 
